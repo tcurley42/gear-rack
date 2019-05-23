@@ -6,5 +6,3 @@ inventory via an application, they can keep track of everything they have. They
 will also be able to view their friends' gear to see if they have something they
 could borrow.
 
-
-
