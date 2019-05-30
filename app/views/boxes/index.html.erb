@@ -1,7 +1,13 @@
 <h1>All Boxes</h1>
 
-<% Box.all.each do |box| %>
-User: <%= box.user.name %><br>
-  <a href="/boxes/<%= box.id %>"><%= box.name %></a><br><br>
+<% User.all.each do |user| %>
+  <h2><%= user.name %></h2>
+  <% if user.boxes.empty? %>
+    User does not have any boxes yet!
+  <% else %>
+    <% user.boxes.each do |box| %>
+      <a href="/boxes/<%= box.id %>"><%= box.name %></a><br><br>
+    <% end %>
+  <% end %>
 <% end %>
 

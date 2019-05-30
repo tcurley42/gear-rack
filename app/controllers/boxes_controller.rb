@@ -20,14 +20,15 @@ class BoxesController < ApplicationController
 
   # POST: /boxes
   post "/boxes" do
-    if !params[box].empty?
+    if !params[:box].empty? && !params[:box][:name].empty?
       @user = current_user
-      @box = Box.create(params[box])
+      @box = Box.create(params[:box])
       @user.boxes << @box
 
       redirect "/boxes/#{@box.id}"
+    else
+      redirect "/boxes/new"
     end
-    redirect "/boxes"
   end
 
   # GET: /boxes/5
@@ -35,8 +36,12 @@ class BoxesController < ApplicationController
     if !logged_in?
       redirect '/login'
     else
-      @box = Box.find(params[id])
-      erb :"/boxes/show.html"
+      @box = Box.find_by(id: params[:id])
+      if !@box.nil?
+        erb :"/boxes/show.html"
+      else
+        redirect "/boxes"
+      end
     end
   end
 
@@ -51,11 +56,30 @@ class BoxesController < ApplicationController
 
   # PATCH: /boxes/5
   patch "/boxes/:id" do
-    redirect "/boxes/:id"
+    if !logged_in?
+      redirect '/login'
+    else
+      if !params[:name].empty?
+        @box = Box.find(params[:id])
+        @box.update(name: params[:name])
+      end
+    redirect "/boxes/#{params[:id]}"
+    end
   end
 
   # DELETE: /boxes/5/delete
   delete "/boxes/:id/delete" do
-    redirect "/boxes"
+    if !logged_in?
+      redirect '/login'
+    else
+      user = current_user
+      box = Box.find(params[:id])
+      if box.user_id == user.id
+        box.destroy
+        redirect "/boxes"
+      else
+        redirect "/boxes/#{params[:id]}"
+      end
+    end
   end
 end

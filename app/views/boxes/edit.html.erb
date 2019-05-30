@@ -1,1 +1,12 @@
-<h1>Insert the form to edit an instance of your model here.</h1>
+<h1>Edit Box</h1>
+<div id="container">
+<form action="/boxes/<%=@box.id%>/edit" method="post">
+  <input type="hidden" id="hidden" name="_method" value="patch"/>
+  <label for="name">Name:</label> <input type="text" name="name" id="name" value="<%= @box.name %>"/>
+  <input type="submit" value="Edit Box"/>
+</form>
+<form action="/boxes/<%= @box.id%>" method="get">
+  <input type="submit" value="Cancel"/>
+</form>
+</div>
+

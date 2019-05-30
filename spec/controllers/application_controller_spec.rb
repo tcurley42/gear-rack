@@ -231,7 +231,7 @@ describe ApplicationController do
 
       it 'does not let a user create a box from another user' do
         user = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        user2 = User.create(:anem => "Test2", :username => "silverstallion", :email => "silver@aol.com", :password => "horses")
+        user2 = User.create(:name => "Test2", :username => "silverstallion", :email => "silver@aol.com", :password => "horses")
 
         visit '/login'
 
@@ -372,7 +372,7 @@ describe ApplicationController do
         click_button 'submit'
         visit '/boxes/1/edit'
 
-        fill_in(:name, :with => "")
+        find("#name").find("[name=name]").fill_in(:name, :with => "")
 
         click_button 'submit'
         expect(Box.find(box.id)).to be(nil)
@@ -417,6 +417,7 @@ describe ApplicationController do
         fill_in(:password, :with => "kittens")
         click_button 'submit'
         visit "boxes/#{box2.id}"
+        binding.pry
         click_button "Delete Box"
         expect(page.status_code).to eq(200)
         expect(Box.find(box2.id)).to be_instance_of(Box)

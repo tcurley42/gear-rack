@@ -1,1 +1,27 @@
-<h1>This is the show page for an individual instance of your model.</h1>
+<h1><%= @box.name %></h1>
+<% if @box.user_id == current_user.id %>
+  <form action="/boxes/<%= @box.id %>/edit" method=get>
+    <div class="container">
+      <input type="submit" value="Edit Box"/>
+    </div>
+  </form>
+  <form action="/boxes/<%= @box.id %>/delete" method=post>
+    <div class="container">
+      <input type="hidden" id="hidden" name="_method" value="delete"/>
+      <input type="submit" value="Delete Box"/>
+    </div>
+  </form>
+<% end %>
+<h2>Items</h2>
+<br>
+<% @box.items.each do |item| %>
+  <a href="/items/<%= item.id %>"><%= item.name %></a><br>
+  <p><%= item.description %></p><br>
+<% end %>
+<% if @box.user_id == current_user.id %>
+  <a href="/items/new">Create Item</a>
+<% end %>
+<br>
+<br>
+<br>
+
