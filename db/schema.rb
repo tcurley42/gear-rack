@@ -13,16 +13,19 @@
 ActiveRecord::Schema.define(version: 2019_05_25_004029) do
 
   create_table "boxes", force: :cascade do |t|
-    t.string "sport"
+    t.string "name"
+    t.integer "user_id"
   end
 
   create_table "items", force: :cascade do |t|
     t.string "name"
     t.string "description"
+    t.integer "box_id"
   end
 
   create_table "users", force: :cascade do |t|
     t.string "username"
+    t.string "name"
     t.string "email"
     t.string "password_digest"
   end

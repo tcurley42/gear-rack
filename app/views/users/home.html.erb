@@ -1,0 +1,7 @@
+<h1>Welcome to your Gear Rack, <%= @user.name %></h1>
+
+<a href="/boxes/new">Create New Box</a> or <a href="/items/new">Create New Item</a>
+<br>
+<% @user.boxes.each do |box|%>
+  <a href="/boxes/<% box.id %>"><% box.name %></a><br>
+<% end %>

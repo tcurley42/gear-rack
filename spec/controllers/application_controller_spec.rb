@@ -20,19 +20,32 @@ describe ApplicationController do
 
     it 'signup directs user to gear rack index' do
       params = {
-        :username => "skittles123",
-        :email => "skittles@aol.com",
-        :password => "rainbows"
+          :name => "Test User",
+          :username => "skittles123",
+          :email => "skittles@aol.com",
+          :password => "rainbows"
       }
       post '/signup', params
-      expect(last_response.location).to include("/gear")
+      expect(last_response.location).to include("/home")
+    end
+
+    it 'does not let a user sign up without a name' do
+      params = {
+          :name => "",
+          :username => "skittles123",
+          :email => "skittles@aol.com",
+          :password => "rainbows"
+      }
+      post '/signup', params
+      expect(last_response.location).to include('/signup')
     end
 
     it 'does not let a user sign up without a username' do
       params = {
-        :username => "",
-        :email => "skittles@aol.com",
-        :password => "rainbows"
+          :name => "Test User",
+          :username => "",
+          :email => "skittles@aol.com",
+          :password => "rainbows"
       }
       post '/signup', params
       expect(last_response.location).to include('/signup')
@@ -40,9 +53,10 @@ describe ApplicationController do
 
     it 'does not let a user sign up without an email' do
       params = {
-        :username => "skittles123",
-        :email => "",
-        :password => "rainbows"
+          :name => "Test User",
+          :username => "skittles123",
+          :email => "",
+          :password => "rainbows"
       }
       post '/signup', params
       expect(last_response.location).to include('/signup')
@@ -50,9 +64,10 @@ describe ApplicationController do
 
     it 'does not let a user sign up without a password' do
       params = {
-        :username => "skittles123",
-        :email => "skittles@aol.com",
-        :password => ""
+          :name => "Test User",
+          :username => "skittles123",
+          :email => "skittles@aol.com",
+          :password => ""
       }
       post '/signup', params
       expect(last_response.location).to include('/signup')
@@ -60,13 +75,14 @@ describe ApplicationController do
 
     it 'creates a new user and logs them in on valid submission and does not let a logged in user view the signup page' do
       params = {
-        :username => "skittles123",
-        :email => "skittles@aol.com",
-        :password => "rainbows"
+          :name => "Test User",
+          :username => "skittles123",
+          :email => "skittles@aol.com",
+          :password => "rainbows"
       }
       post '/signup', params
       get '/signup'
-      expect(last_response.location).to include('/gear')
+      expect(last_response.location).to include('/home')
     end
   end
 
@@ -97,7 +113,7 @@ describe ApplicationController do
       }
       post '/login', params
       get '/login'
-      expect(last_response.location).to include("/gear")
+      expect(last_response.location).to include("/home")
     end
   end
 
@@ -119,12 +135,12 @@ describe ApplicationController do
       expect(last_response.location).to include("/")
     end
 
-    it 'does not load /gear if user not logged in' do
-      get '/gear'
+    it 'does not load /home if user not logged in' do
+      get '/home'
       expect(last_response.location).to include("/login")
     end
 
-    it 'does load /gear if user is logged in' do
+    it 'does load /home if user is logged in' do
       user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
 
 
@@ -133,14 +149,14 @@ describe ApplicationController do
       fill_in(:username, :with => "becky567")
       fill_in(:password, :with => "kittens")
       click_button 'submit'
-      expect(page.current_path).to eq('/gear')
+      expect(page.current_path).to eq('/home')
     end
   end
 
   describe 'user show page' do
     it 'shows all a single users gear boxes' do
-      user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-      tweet1 = Tweet.create(:content => "tweeting!", :user_id => user.id)
+      user = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
+      box1 = Box.create(:name => "", :user_id => user.id)
       tweet2 = Tweet.create(:content => "tweet tweet tweet", :user_id => user.id)
       get "/users/#{user.slug}"
 

@@ -4,7 +4,7 @@ class UsersController < ApplicationController
     if logged_in?
       redirect '/home'
     else
-      erb :'users/create_user'
+      erb :'users/create_user.html'
     end
   end
 
@@ -12,7 +12,7 @@ class UsersController < ApplicationController
     if logged_in?
       redirect '/home'
     else
-      erb :'users/login'
+      erb :'users/login.html'
     end
   end
 
@@ -27,7 +27,7 @@ class UsersController < ApplicationController
   end
 
   post '/signup' do
-    if params[:username].empty? || params[:email].empty? || params[:password].empty?
+    if params[:username].empty? || params[:email].empty? || params[:password].empty? || params[:name].empty?
       redirect '/signup'
     else
       @user = User.create(params)
@@ -54,10 +54,17 @@ class UsersController < ApplicationController
   get '/users/:slug' do
     @user = User.find_by_slug(params[:slug])
     if @user
-      erb :'users/show'
+      erb :'users/show.html'
     else
       redirect '/'
     end
   end
 
+  get '/home' do
+    if !logged_in?
+      redirect '/'
+    else
+      erb :'users/home.html'
+    end
+  end
 end
