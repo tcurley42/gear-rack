@@ -1,7 +1,7 @@
 require 'pry'
 describe 'User' do
   before do
-    @user = User.create(:username => "test 123", :email => "test123@aol.com", :password => "test")
+    @user = User.create(:name => "Test 123", :username => "test 123", :email => "test123@aol.com", :password => "test")
   end
   it 'can slug the username' do
     expect(@user.slug).to eq("test-123")

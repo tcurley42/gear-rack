@@ -64,6 +64,7 @@ class UsersController < ApplicationController
     if !logged_in?
       redirect '/'
     else
+      @user = current_user
       erb :'users/home.html'
     end
   end

@@ -1,1 +1,7 @@
-<h1>This is the Model's index page.</h1>
+<h1>All Boxes</h1>
+
+<% Box.all.each do |box| %>
+User: <%= box.user.name %><br>
+  <a href="/boxes/<%= box.id %>"><%= box.name %></a><br><br>
+<% end %>
+

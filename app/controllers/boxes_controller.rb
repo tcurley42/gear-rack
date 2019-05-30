@@ -2,7 +2,11 @@ class BoxesController < ApplicationController
 
   # GET: /boxes
   get "/boxes" do
-    erb :"/boxes/index.html"
+    if !logged_in?
+      redirect '/login'
+    else
+      erb :"/boxes/index.html"
+    end
   end
 
   # GET: /boxes/new
@@ -10,7 +14,7 @@ class BoxesController < ApplicationController
     if logged_in?
       erb :"/boxes/new.html"
     else
-      redirect '/'
+      redirect '/login'
     end
   end
 
@@ -28,13 +32,21 @@ class BoxesController < ApplicationController
 
   # GET: /boxes/5
   get "/boxes/:id" do
-    @box = Box.find(params[id])
-    erb :"/boxes/show.html"
+    if !logged_in?
+      redirect '/login'
+    else
+      @box = Box.find(params[id])
+      erb :"/boxes/show.html"
+    end
   end
 
   # GET: /boxes/5/edit
   get "/boxes/:id/edit" do
-    erb :"/boxes/edit.html"
+    if !logged_in?
+      redirect '/login'
+    else
+      erb :"/boxes/edit.html"
+    end
   end
 
   # PATCH: /boxes/5

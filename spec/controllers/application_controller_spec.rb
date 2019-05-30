@@ -7,7 +7,7 @@ describe ApplicationController do
     it 'loads the homepage' do
       get '/'
       expect(last_response.status).to eq(200)
-      expect(last_response.body).to include("Welcome to Gear Rack")
+      expect(last_response.body).to include("Welcome to GearRack!")
     end
   end
 
@@ -93,7 +93,7 @@ describe ApplicationController do
     end
 
     it 'loads the gear index after login' do
-      user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+      user = User.create(:name => "Testing", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
       params = {
         :username => "becky567",
         :password => "kittens"
@@ -102,11 +102,11 @@ describe ApplicationController do
       expect(last_response.status).to eq(302)
       follow_redirect!
       expect(last_response.status).to eq(200)
-      expect(last_response.body).to include("Welcome,")
+      expect(last_response.body).to include("Welcome to your Gear Rack, #{user.name}")
     end
 
     it 'does not let user view login page if already logged in' do
-      user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+      user = User.create(:name => "Testing", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
       params = {
         :username => "becky567",
         :password => "kittens"
@@ -119,7 +119,7 @@ describe ApplicationController do
 
   describe "logout" do
     it "lets a user logout if they are already logged in" do
-      user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+      user = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
 
       params = {
         :username => "becky567",
@@ -137,11 +137,11 @@ describe ApplicationController do
 
     it 'does not load /home if user not logged in' do
       get '/home'
-      expect(last_response.location).to include("/login")
+      expect(last_response.location).to include("/")
     end
 
     it 'does load /home if user is logged in' do
-      user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+      user = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
 
 
       visit '/login'
@@ -157,7 +157,7 @@ describe ApplicationController do
     it 'shows all a single users gear boxes' do
       user = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
       box1 = Box.create(:name => "Snowboarding", :user_id => user.id)
-      box2 = Tweet.create(:name => "Skiing", :user_id => user.id)
+      box2 = Box.create(:name => "Skiing", :user_id => user.id)
       get "/users/#{user.slug}"
 
       expect(last_response.body).to include("Snowboarding")
@@ -173,7 +173,7 @@ describe ApplicationController do
         box1 = Box.create(:name => "Snowboarding", :user_id => user1.id)
 
         user2 = User.create(:name => "Tester", :username => "silverstallion", :email => "silver@aol.com", :password => "horses")
-        box2 = Box.create(:content => "Skiing", :user_id => user2.id)
+        box2 = Box.create(:name => "Skiing", :user_id => user2.id)
 
         visit '/login'
 
@@ -181,8 +181,8 @@ describe ApplicationController do
         fill_in(:password, :with => "kittens")
         click_button 'submit'
         visit "/boxes"
-        expect(page.body).to include(box1.content)
-        expect(page.body).to include(box2.content)
+        expect(page.body).to include(box1.name)
+        expect(page.body).to include(box2.name)
       end
     end
 
@@ -325,7 +325,7 @@ describe ApplicationController do
         click_button 'submit'
         visit '/boxes/1/edit'
         expect(page.status_code).to eq(200)
-        expect(page.body).to include(box.content)
+        expect(page.body).to include(box.name)
       end
 
       it 'does not let a user edit a box they did not create' do

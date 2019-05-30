@@ -54,4 +54,4 @@ build-iPhoneSimulator/
 .rvmrc
 
 # SQL DBs
- *.sqlite
+db/*.sqlite
