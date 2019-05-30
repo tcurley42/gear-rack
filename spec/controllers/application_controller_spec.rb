@@ -156,39 +156,40 @@ describe ApplicationController do
   describe 'user show page' do
     it 'shows all a single users gear boxes' do
       user = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
-      box1 = Box.create(:name => "", :user_id => user.id)
-      tweet2 = Tweet.create(:content => "tweet tweet tweet", :user_id => user.id)
+      box1 = Box.create(:name => "Snowboarding", :user_id => user.id)
+      box2 = Tweet.create(:name => "Skiing", :user_id => user.id)
       get "/users/#{user.slug}"
 
-      expect(last_response.body).to include("tweeting!")
-      expect(last_response.body).to include("tweet tweet tweet")
+      expect(last_response.body).to include("Snowboarding")
+      expect(last_response.body).to include("Skiing")
 
     end
   end
 
   describe 'index action' do
     context 'logged in' do
-      it 'lets a user view the tweets index if logged in' do
-        user1 = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        tweet1 = Tweet.create(:content => "tweeting!", :user_id => user1.id)
+      it 'lets a user view the boxes index if logged in' do
+        user1 = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        box1 = Box.create(:name => "Snowboarding", :user_id => user1.id)
 
-        user2 = User.create(:username => "silverstallion", :email => "silver@aol.com", :password => "horses")
-        tweet2 = Tweet.create(:content => "look at this tweet", :user_id => user2.id)
+        user2 = User.create(:name => "Tester", :username => "silverstallion", :email => "silver@aol.com", :password => "horses")
+        box2 = Box.create(:content => "Skiing", :user_id => user2.id)
 
         visit '/login'
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
         click_button 'submit'
-        visit "/tweets"
-        expect(page.body).to include(tweet1.content)
-        expect(page.body).to include(tweet2.content)
+        visit "/boxes"
+        expect(page.body).to include(box1.content)
+        expect(page.body).to include(box2.content)
       end
     end
 
     context 'logged out' do
-      it 'does not let a user view the tweets index if not logged in' do
-        get '/tweets'
+      it 'does not let a user view the boxes index if not logged in' do
+
+        get '/boxes'
         expect(last_response.location).to include("/login")
       end
     end
@@ -197,7 +198,7 @@ describe ApplicationController do
   describe 'new action' do
     context 'logged in' do
       it 'lets user view new box form if logged in' do
-        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        user = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
 
         visit '/login'
 
@@ -209,7 +210,7 @@ describe ApplicationController do
       end
 
       it 'lets user create a box if they are logged in' do
-        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        user = User.create(:name => "test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
 
         visit '/login'
 
@@ -218,19 +219,19 @@ describe ApplicationController do
         click_button 'submit'
 
         visit '/boxes/new'
-        fill_in(:sport, :with => "Snowboarding")
+        fill_in(:name, :with => "Snowboarding")
         click_button 'submit'
 
         user = User.find_by(:username => "becky567")
-        box = Box.find_by(:content => "Snowboarding")
+        box = Box.find_by(:name => "Snowboarding", :user_id => user.id)
         expect(box).to be_instance_of(Box)
         expect(box.user_id).to eq(user.id)
         expect(page.status_code).to eq(200)
       end
 
       it 'does not let a user create a box from another user' do
-        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        user2 = User.create(:username => "silverstallion", :email => "silver@aol.com", :password => "horses")
+        user = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        user2 = User.create(:anem => "Test2", :username => "silverstallion", :email => "silver@aol.com", :password => "horses")
 
         visit '/login'
 
@@ -240,19 +241,19 @@ describe ApplicationController do
 
         visit '/boxes/new'
 
-        fill_in(:sport, :with => "Skiing")
+        fill_in(:name, :with => "Skiing")
         click_button 'submit'
 
         user = User.find_by(:id=> user.id)
         user2 = User.find_by(:id => user2.id)
-        box = Box.find_by(:sport => "Skiing")
+        box = Box.find_by(:name => "Skiing", :user_id => user.id)
         expect(box).to be_instance_of(Box)
         expect(box.user_id).to eq(user.id)
         expect(box.user_id).not_to eq(user2.id)
       end
 
       it 'does not let a user create a blank box' do
-        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        user = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
 
         visit '/login'
 
@@ -262,10 +263,10 @@ describe ApplicationController do
 
         visit '/boxes/new'
 
-        fill_in(:sport, :with => "")
+        fill_in(:name, :with => "")
         click_button 'submit'
 
-        expect(Box.find_by(:sport => "")).to eq(nil)
+        expect(Box.find_by(:name => "")).to eq(nil)
         expect(page.current_path).to eq("/boxes/new")
       end
     end
@@ -283,7 +284,7 @@ describe ApplicationController do
       it 'displays a single box' do
 
         user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        box = Box.create(:sport => "Climbing", :user_id => user.id)
+        box = Box.create(:name => "Climbing", :user_id => user.id)
         item = Item.create(:name => "Harness", :description => "Orange blah blah harness")
         box.items << item
 
@@ -296,7 +297,7 @@ describe ApplicationController do
         visit "/boxes/#{box.id}"
         expect(page.status_code).to eq(200)
         expect(page.body).to include("Delete Box")
-        expect(page.body).to include(box.sport)
+        expect(page.body).to include(box.name)
         expect(page.body).to include("Edit Box")
         expect(page.body).to include(item.name)
       end
@@ -304,8 +305,8 @@ describe ApplicationController do
 
     context 'logged out' do
       it 'does not let a user view a box' do
-        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        box = Box.create(:sport => "Climbing", :user_id => user.id)
+        user = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        box = Box.create(:name => "Climbing", :user_id => user.id)
         get "/boxes/#{box.id}"
         expect(last_response.location).to include("/login")
       end
@@ -315,8 +316,8 @@ describe ApplicationController do
   describe 'edit action' do
     context "logged in" do
       it 'lets a user view box edit form if they are logged in' do
-        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        box = Box.create(:sport => "Skiing", :user_id => user.id)
+        user = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        box = Box.create(:name => "Skiing", :user_id => user.id)
         visit '/login'
 
         fill_in(:username, :with => "becky567")
@@ -328,11 +329,11 @@ describe ApplicationController do
       end
 
       it 'does not let a user edit a box they did not create' do
-        user1 = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        box1 = Box.create(:sport => "Climbing", :user_id => user1.id)
+        user1 = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        box1 = Box.create(:name => "Climbing", :user_id => user1.id)
 
-        user2 = User.create(:username => "silverstallion", :email => "silver@aol.com", :password => "horses")
-        box2 = Box.create(:sport => "Skiing", :user_id => user2.id)
+        user2 = User.create(:name => "Test2", :username => "silverstallion", :email => "silver@aol.com", :password => "horses")
+        box2 = Box.create(:name => "Skiing", :user_id => user2.id)
 
         visit '/login'
 
@@ -344,8 +345,8 @@ describe ApplicationController do
       end
 
       it 'lets a user edit their own box if they are logged in' do
-        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        box = Box.create(:sport => "Climbing", :user_id => 1)
+        user = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        box = Box.create(:name => "Climbing", :user_id => 1)
         visit '/login'
 
         fill_in(:username, :with => "becky567")
@@ -353,7 +354,7 @@ describe ApplicationController do
         click_button 'submit'
         visit '/boxes/1/edit'
 
-        fill_in(:sport, :with => "Skiing")
+        fill_in(:name, :with => "Skiing")
 
         click_button 'submit'
         expect(Box.find_by(id: box.id, sport: "Skiing")).to be_instance_of(Box)
@@ -361,9 +362,9 @@ describe ApplicationController do
         expect(page.status_code).to eq(200)
       end
 
-      it 'does not let a user edit a text with blank sport' do
-        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        box = Box.create(:sport => "Skiing", :user_id => 1)
+      it 'does not let a user edit a text with blank name' do
+        user = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        box = Box.create(:name => "Skiing", :user_id => 1)
         visit '/login'
 
         fill_in(:username, :with => "becky567")
@@ -371,7 +372,7 @@ describe ApplicationController do
         click_button 'submit'
         visit '/boxes/1/edit'
 
-        fill_in(:sport, :with => "")
+        fill_in(:name, :with => "")
 
         click_button 'submit'
         expect(Box.find(box.id)).to be(nil)
@@ -390,8 +391,8 @@ describe ApplicationController do
   describe 'delete action' do
     context "logged in" do
       it 'lets a user delete their own box if they are logged in' do
-        user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        box = Box.create(:sport => "Skiing", :user_id => 1)
+        user = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        box = Box.create(:name => "Skiing", :user_id => 1)
         visit '/login'
 
         fill_in(:username, :with => "becky567")
@@ -404,11 +405,11 @@ describe ApplicationController do
       end
 
       it 'does not let a user delete a box they did not create' do
-        user1 = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        box1 = Box.create(:sport => "Skiing", :user_id => user1.id)
+        user1 = User.create(:name => "Test", :username => "becky567", :email => "starz@aol.com", :password => "kittens")
+        box1 = Box.create(:name => "Skiing", :user_id => user1.id)
 
-        user2 = User.create(:username => "silverstallion", :email => "silver@aol.com", :password => "horses")
-        box2 = Box.create(:sport => "Snowboarding", :user_id => user2.id)
+        user2 = User.create(:name => "Test2", :username => "silverstallion", :email => "silver@aol.com", :password => "horses")
+        box2 = Box.create(:name => "Snowboarding", :user_id => user2.id)
 
         visit '/login'
 
@@ -425,7 +426,7 @@ describe ApplicationController do
 
     context "logged out" do
       it 'does not load let user delete a box if not logged in' do
-        box = Box.create(:sport => "Skiing", :user_id => 1)
+        box = Box.create(:name => "Skiing", :user_id => 1)
         visit '/boxes/1'
         expect(page.current_path).to eq("/login")
       end
