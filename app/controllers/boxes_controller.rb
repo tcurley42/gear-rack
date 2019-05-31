@@ -50,7 +50,12 @@ class BoxesController < ApplicationController
     if !logged_in?
       redirect '/login'
     else
-      erb :"/boxes/edit.html"
+      @box = Box.find_by(id: params[:id])
+      if !@box.nil?
+        erb :"/boxes/edit.html"
+      else
+        redirect "/boxes"
+      end
     end
   end
 
@@ -60,10 +65,16 @@ class BoxesController < ApplicationController
       redirect '/login'
     else
       if !params[:name].empty?
-        @box = Box.find(params[:id])
-        @box.update(name: params[:name])
+        @box = Box.find_by(id: params[:id])
+        if !@box.nil?
+          @box.update(name: params[:name])
+          redirect "/boxes/#{@box.id}"
+        else 
+          redirect "/boxes"
+        end
+      else
+        redirect "/boxes/#{params[:id]}/edit"
       end
-    redirect "/boxes/#{params[:id]}"
     end
   end
 

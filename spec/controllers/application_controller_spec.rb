@@ -357,8 +357,8 @@ describe ApplicationController do
         fill_in(:name, :with => "Skiing")
 
         click_button 'submit'
-        expect(Box.find_by(id: box.id, sport: "Skiing")).to be_instance_of(Box)
-        expect(Box.find_by(id: box.id, sport: "Climbing")).to eq(nil)
+        expect(Box.find_by(id: box.id, name: "Skiing")).to be_instance_of(Box)
+        expect(Box.find_by(id: box.id, name: "Climbing")).to eq(nil)
         expect(page.status_code).to eq(200)
       end
 
@@ -372,10 +372,10 @@ describe ApplicationController do
         click_button 'submit'
         visit '/boxes/1/edit'
 
-        find("#name").find("[name=name]").fill_in(:name, :with => "")
+        fill_in(:name, :with => "")
 
         click_button 'submit'
-        expect(Box.find(box.id)).to be(nil)
+        expect(Box.find(box.id).name).to eq("Skiing")
         expect(page.current_path).to eq("/boxes/1/edit")
       end
     end
@@ -401,7 +401,7 @@ describe ApplicationController do
         visit 'boxes/1'
         click_button "Delete Box"
         expect(page.status_code).to eq(200)
-        expect(Box.find(box.id)).to eq(nil)
+        expect(Box.find_by(id: box.id)).to eq(nil)
       end
 
       it 'does not let a user delete a box they did not create' do
@@ -417,7 +417,6 @@ describe ApplicationController do
         fill_in(:password, :with => "kittens")
         click_button 'submit'
         visit "boxes/#{box2.id}"
-        binding.pry
         click_button "Delete Box"
         expect(page.status_code).to eq(200)
         expect(Box.find(box2.id)).to be_instance_of(Box)

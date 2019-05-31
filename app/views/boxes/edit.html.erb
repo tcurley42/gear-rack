@@ -1,9 +1,9 @@
 <h1>Edit Box</h1>
 <div id="container">
-<form action="/boxes/<%=@box.id%>/edit" method="post">
+<form action="/boxes/<%=@box.id%>" method="post">
   <input type="hidden" id="hidden" name="_method" value="patch"/>
   <label for="name">Name:</label> <input type="text" name="name" id="name" value="<%= @box.name %>"/>
-  <input type="submit" value="Edit Box"/>
+  <input type="submit" name="submit" value="Edit Box"/>
 </form>
 <form action="/boxes/<%= @box.id%>" method="get">
   <input type="submit" value="Cancel"/>
