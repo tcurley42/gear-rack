@@ -1,5 +1,5 @@
 <h1>Edit Box</h1>
-<div id="container">
+<div class="container">
 <form action="/boxes/<%=@box.id%>" method="post">
   <input type="hidden" id="hidden" name="_method" value="patch"/>
   <label for="name">Name:</label> <input type="text" name="name" id="name" value="<%= @box.name %>"/>

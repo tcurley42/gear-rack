@@ -1,1 +1,21 @@
-<h1>Insert the form to create a new instance of your model.</h1>
+<h1>Create a new Item</h1>
+
+<div class="container">
+  <form action="/items" method="post">
+    <label for="box">Box:</label><br>
+    <select name="item[box_id]" id="boxes">
+      <% @user.boxes.each do |box| %>
+        <option value="<%=box.id %>"><%=box.name %></option>
+      <% end %>
+    </select>
+    <br>
+    <label for="name">Name:</label>
+    <input type="text" name="item[name]" id="name"/>
+    <br>
+    <label for="description">Description:</label>
+    <input type="text" name="item[description]" id="description"/>
+    <br>
+    <input type="submit" id="submit" name="submit" value="Create Item"/>
+  </form>
+  <br>
+</div>

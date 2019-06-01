@@ -5,13 +5,15 @@ class ItemsController < ApplicationController
     if !logged_in?
       redirect '/login'
     else
+      @user = current_user
       erb :"/items/index.html"
     end
   end
 
   # GET: /items/new
-  get "/boxes/:box_id/items/new" do
+  get "/items/new" do
     if logged_in?
+      @user = current_user
       erb :"/items/new.html"
     else
       redirect '/login'
@@ -19,12 +21,10 @@ class ItemsController < ApplicationController
   end
 
   # POST: /items
-  post "/boxes/:box_id/items" do
+  post "/items" do
     if !params[:item].empty? && !params[:item][:name].empty?
       @user = current_user
-      @box
-      @item = item.create(params[:item])
-      @user.items << @item
+      @item = Item.create(params[:item])
 
       redirect "/items/#{@item.id}"
     else
@@ -33,11 +33,11 @@ class ItemsController < ApplicationController
   end
 
   # GET: /items/5
-  get "/boxes/:box_id/items/:id" do
+  get "/items/:id" do
     if !logged_in?
       redirect '/login'
     else
-      @item = item.find_by(id: params[:id])
+      @item = Item.find_by(id: params[:id])
       if !@item.nil?
         erb :"/items/show.html"
       else
@@ -47,11 +47,11 @@ class ItemsController < ApplicationController
   end
 
   # GET: /items/5/edit
-  get "/boxes/:box_id/items/:id/edit" do
+  get "/items/:id/edit" do
     if !logged_in?
       redirect '/login'
     else
-      @item = item.find_by(id: params[:id])
+      @item = Item.find_by(id: params[:id])
       if !@item.nil?
         erb :"/items/edit.html"
       else
@@ -61,12 +61,12 @@ class ItemsController < ApplicationController
   end
 
   # PATCH: /items/5
-  patch "/boxes/:box_id/items/:id" do
+  patch "/items/:id" do
     if !logged_in?
       redirect '/login'
     else
       if !params[:name].empty?
-        @item = item.find_by(id: params[:id])
+        @item = Item.find_by(id: params[:id])
         if !@item.nil?
           @item.update(name: params[:name])
           redirect "/items/#{@item.id}"
@@ -80,12 +80,12 @@ class ItemsController < ApplicationController
   end
 
   # DELETE: /items/5/delete
-  delete "/boxes/:box_id/items/:id/delete" do
+  delete "/items/:id/delete" do
     if !logged_in?
       redirect '/login'
     else
       user = current_user
-      item = item.find(params[:id])
+      item = Item.find(params[:id])
       if item.user_id == user.id
         item.destroy
         redirect "/items"
