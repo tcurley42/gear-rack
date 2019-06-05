@@ -1,7 +1,10 @@
 <h1>All Boxes</h1>
+<% if flash[:message] %>
+  <p class="error"><%= flash[:message] %></p>
+<% end %>
 
 <% User.all.each do |user| %>
-  <h2><%= user.name %></h2>
+  <h2><%= user.name %> (<%= user.username %>)</h2>
   <% if user.boxes.empty? %>
     User does not have any boxes yet!
   <% else %>
@@ -10,4 +13,3 @@
     <% end %>
   <% end %>
 <% end %>
-

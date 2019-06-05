@@ -1,3 +1,6 @@
+<% if flash[:message] %>
+  <p class="error"><%= flash[:message] %></p>
+<% end %>
 <h1><%= @box.name %></h1>
   <form action="/boxes/<%= @box.id %>/edit" method="get">
     <div class="container">
@@ -10,16 +13,18 @@
       <input type="submit" value="Delete Box"/>
     </div>
   </form>
+<br>
 <h2>Items</h2>
 <br>
 <% @box.items.each do |item| %>
   <a href="/items/<%= item.id %>"><%= item.name %></a><br>
-  <p><%= item.description %></p><br>
+  <p><%= item.description %></p>
 <% end %>
 <% if @box.user_id == current_user.id %>
-  <a href="/items/new">Create Item</a>
+  <div class="container">
+    <form action="/items/new" method="get">
+      <input type="submit" value="Create Item"/>
+    </form>
+  </div>
 <% end %>
-<br>
-<br>
-<br>
 

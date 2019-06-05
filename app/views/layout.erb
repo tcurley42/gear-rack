@@ -19,6 +19,11 @@
   <%= yield %>
 
   <% if logged_in? %>
+    <h2></h2>
+    <a href="/items">View Your Items</a>
+    <br>
+    <br>
+    <a href="/boxes">View All Boxes</a>
     <br><br>
     <a href="/home">Go Home</a> or <a href="/logout">Logout</a>
   <% else %>

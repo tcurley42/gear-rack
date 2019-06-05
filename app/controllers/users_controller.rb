@@ -79,4 +79,12 @@ class UsersController < ApplicationController
       erb :'users/home.html'
     end
   end
+
+  get '/users' do
+    if !logged_in?
+      redirect '/'
+    else
+      erb :'/users/index.html'
+    end
+  end
 end

@@ -1,16 +1,22 @@
 <h1>Welcome to your Gear Rack, <%= @user.name %></h1>
 <br>
-<a href="/boxes/new">Create New Box</a>
-<br>
+<div class="container">
+  <form action="/boxes/new" method="get">
+    <input type="submit" value="Create New Box"/>
+  </form>
+  <br>
+  <form action="/items/new" method="get">
+    <input type="submit" value="Create New Item"/>
+  </form>
+</div>
 <% if @user.boxes.empty? %>
   <br>
   <p>You don't have any boxes yet, create one above!</p>
 <% else %>
   <br>
-  <h3>Boxes</h3>
+  <h2>Boxes</h2>
   <% @user.boxes.each do |box|%>
-    <a href="/boxes/<%= box.id %>"><%= box.name %></a><br>
+    <h4><a href="/boxes/<%= box.id %>"><%= box.name %></a></h4><br>
   <% end %>
 <% end %>
-<br>
-<a href="/items">View All Items</a>
+

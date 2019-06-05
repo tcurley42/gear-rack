@@ -1,4 +1,5 @@
 class ItemsController < ApplicationController
+  register Sinatra::Flash
 
   # GET: /items
   get "/items" do
@@ -56,6 +57,7 @@ class ItemsController < ApplicationController
       if !@item.nil? && @user.items.include?(@item)
         erb :"/items/edit.html"
       else
+        flash[:message] = "You don't have permission to edit someone else's item!"
         redirect "/items"
       end
     end
@@ -91,7 +93,8 @@ class ItemsController < ApplicationController
         item.destroy
         redirect "/items"
       else
-        redirect "/items/#{params[:id]}"
+        flash[:message] = "You don't have permission to edit someone else's item!"
+        redirect "/items"
       end
     end
   end

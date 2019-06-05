@@ -1,4 +1,5 @@
 class BoxesController < ApplicationController
+  register Sinatra::Flash
 
   # GET: /boxes
   get "/boxes" do
@@ -51,9 +52,11 @@ class BoxesController < ApplicationController
       redirect '/login'
     else
       @box = Box.find_by(id: params[:id])
-      if !@box.nil?
+      @user = current_user
+      if !@box.nil? && @user.id == @box.user.id
         erb :"/boxes/edit.html"
       else
+        flash[:message] = "You don't have permissions to edit someone else's box!"
         redirect "/boxes"
       end
     end
@@ -89,7 +92,8 @@ class BoxesController < ApplicationController
         box.destroy
         redirect "/boxes"
       else
-        redirect "/boxes/#{params[:id]}"
+        flash[:message] = "You don't have permission to edit someone else's item!"
+        redirect "/boxes"
       end
     end
   end
