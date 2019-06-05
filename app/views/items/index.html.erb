@@ -8,14 +8,18 @@
 
 <table style="width:100%">
   <tr>
+    <th>Box</th>
     <th>Name</th>
     <th>Description</th>
   </tr>
-<% @user.items.each do |item| %>
-    <tr>
-      <td><a href="/items/<%= item.id %>"><%= item.name %></a></td>
-      <td><%= item.description %></td>
-    </tr>
-<% end %>
+  <% @user.boxes.each do |box| %>
+    <% box.items.each do |item| %>
+      <tr>
+        <td><a href="/boxes/<%= box.id %>"><%= box.name %></a></td>
+        <td><a href="/items/<%= item.id %>"><%= item.name %></a></td>
+        <td><%= item.description %></td>
+      </tr>
+    <% end %>
+  <% end %>
 </table>
 

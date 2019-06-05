@@ -6,7 +6,11 @@
   <br>
   <p>You don't have any boxes yet, create one above!</p>
 <% else %>
+  <br>
+  <h3>Boxes</h3>
   <% @user.boxes.each do |box|%>
-    <a href="/boxes/<%= box.id %>"><% box.name %></a><br>
+    <a href="/boxes/<%= box.id %>"><%= box.name %></a><br>
   <% end %>
 <% end %>
+<br>
+<a href="/items">View All Items</a>

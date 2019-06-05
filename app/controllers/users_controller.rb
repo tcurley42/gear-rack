@@ -30,10 +30,16 @@ class UsersController < ApplicationController
     if params[:username].empty? || params[:email].empty? || params[:password].empty? || params[:name].empty?
       redirect '/signup'
     else
-      @user = User.create(params)
-      session[:user_id] = @user.id
+      @user = User.new(params)
+      if @user.valid?
+        @user.save
+        session[:user_id] = @user.id
 
-      redirect '/home'
+        redirect '/home'
+      else
+        flash[:error] = "Username #{params[:username]} already exists"
+        redirect '/signup'
+      end
     end
   end
 
