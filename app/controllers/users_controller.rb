@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  register Sinatra::Flash
 
   get '/signup' do
     if logged_in?
@@ -37,7 +38,11 @@ class UsersController < ApplicationController
 
         redirect '/home'
       else
-        flash[:error] = "Username #{params[:username]} already exists"
+        errors = []
+        @user.errors.messages.each do |key, value|
+          errors << "#{key} #{value.first}"
+        end
+        flash[:errors] = errors
         redirect '/signup'
       end
     end

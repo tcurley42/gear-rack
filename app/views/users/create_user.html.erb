@@ -1,6 +1,8 @@
 <h1>Signup Page</h1>
-<% if flash[:error] %>
-  <p class="error"><%= flash[:error] %></p>
+<% if flash[:errors] %>
+  <% flash[:errors].each do |error| %>
+    <p class="error"><%= error %></p>
+  <% end %>
 <% end %>
 <div class="container">
   <form action="/signup" method="post">
