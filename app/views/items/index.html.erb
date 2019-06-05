@@ -1,14 +1,10 @@
 <h1>All of <%= @user.name %>'s Items</h1>
-<% if flash[:message] %>
-  <p class="error"><%= flash[:message] %></p>
-<% end %>
 
 <div class="container">
   <form action="/items/new" method="get">
     <input type="submit" value="Create Item"/>
   </form>
 </div>
-<br>
 <table style="width:100%">
   <tr>
     <th>Box</th>

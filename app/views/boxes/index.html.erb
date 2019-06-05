@@ -1,8 +1,11 @@
 <h1>All Boxes</h1>
-<% if flash[:message] %>
-  <p class="error"><%= flash[:message] %></p>
-<% end %>
 
+<div class="container">
+  <form action="/boxes/new" method="get">
+    <input type="submit" value="Create Box"/>
+  </form>
+</div>
+<br>
 <% User.all.each do |user| %>
   <h2><%= user.name %> (<%= user.username %>)</h2>
   <% if user.boxes.empty? %>

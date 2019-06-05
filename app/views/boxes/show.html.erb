@@ -1,6 +1,3 @@
-<% if flash[:message] %>
-  <p class="error"><%= flash[:message] %></p>
-<% end %>
 <h1><%= @box.name %></h1>
   <form action="/boxes/<%= @box.id %>/edit" method="get">
     <div class="container">

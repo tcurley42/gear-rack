@@ -16,6 +16,10 @@
 <body>
 <div class="wrapper">
 
+  <% if flash[:message] %>
+    <p class="error"><%= flash[:message] %></p>
+  <% end %>
+
   <%= yield %>
 
   <% if logged_in? %>
