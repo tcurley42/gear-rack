@@ -1,3 +1,11 @@
-<h1><%= @item.name %></h1>
-<h2><%= @item.description %></h2>
-<a href="/boxes/<%=@item.box.id %>"><h2><%= @item.box.name %></h2></a>
+<h1>Name: <%= @item.name %></h1>
+<h2>Description: <%= @item.description %></h2>
+<h2>Box: <a href="/boxes/<%=@item.box.id %>"><%= @item.box.name %></a></h2>
+<br>
+<form action="/items/<%= @item.id %>/edit" method="get">
+  <input type="submit" id="Edit Item" value="Edit Item"/>
+</form><br>
+<form action="/items/<%= @item.id %>/delete" method="post">
+  <input type="hidden" id="hidden" name="_method" value="delete"/>
+  <input type="submit" id="Delete Item" value="Delete Item"/>
+</form>

@@ -13,7 +13,7 @@
   </tr>
 <% @user.items.each do |item| %>
     <tr>
-      <td><%= item.name %></td>
+      <td><a href="/items/<%= item.id %>"><%= item.name %></a></td>
       <td><%= item.description %></td>
     </tr>
 <% end %>

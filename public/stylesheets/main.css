@@ -124,12 +124,20 @@
     color   : #FFF;
   }
 
+  th {
+    text-align: left;
+  }
+
+  table, th, td {
+    border: 1px solid black;
+  }
+
   a:link {
-    color: #265301;
+    color: blue;
   }
 
   a:visited {
-    color: #437A16;
+    color: purple;
   }
 
   a:focus {

@@ -52,7 +52,8 @@ class ItemsController < ApplicationController
       redirect '/login'
     else
       @item = Item.find_by(id: params[:id])
-      if !@item.nil?
+      @user = current_user
+      if !@item.nil? && @user.items.include?(@item)
         erb :"/items/edit.html"
       else
         redirect "/items"
@@ -65,10 +66,10 @@ class ItemsController < ApplicationController
     if !logged_in?
       redirect '/login'
     else
-      if !params[:name].empty?
+      if !params[:item].empty? && !params[:item][:name].empty?
         @item = Item.find_by(id: params[:id])
         if !@item.nil?
-          @item.update(name: params[:name])
+          @item.update(params[:item])
           redirect "/items/#{@item.id}"
         else 
           redirect "/items"
@@ -86,7 +87,7 @@ class ItemsController < ApplicationController
     else
       user = current_user
       item = Item.find(params[:id])
-      if item.user_id == user.id
+      if user.items.include?(item)
         item.destroy
         redirect "/items"
       else
